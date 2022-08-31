@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.TestImages;
 import org.testcontainers.Testcontainers;
@@ -15,6 +16,7 @@ import java.net.InetSocketAddress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore
 public class ExposedHostTest {
 
     private static HttpServer server;
