@@ -24,9 +24,9 @@ jobs:
           distribution: temurin
       - name: Setup Gradle Build Action
         uses: gradle/gradle-build-action@v2
-      - id: Run core tests
+      - name: Build & test (core)
         run: |
-          ./gradlew clean testcontainers:check --no-daemon --continue
+          .\gradlew.bat clean testcontainers:check --no-daemon --continue
 
   non-core-checks:
     runs-on: windows-2022
@@ -38,6 +38,6 @@ jobs:
           distribution: temurin
       - name: Setup Gradle Build Action
         uses: gradle/gradle-build-action@v2
-      - id: Run core tests
+      - name: Build & test (all non-core modules)
         run: |
-          ./gradlew clean check -x testcontainers:check --no-daemon --continue
+          .\gradlew.bat clean check -x testcontainers:check --no-daemon --continue
