@@ -8,6 +8,9 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-18.04
@@ -19,6 +22,9 @@ jobs:
           distribution: temurin
       - name: Clear existing docker image cache
         run: docker image prune -af
+
+      - name: Setup Gradle Build Action
+        uses: gradle/gradle-build-action@v2
 
       - name: Run Gradle Build
         run: ./gradlew build --scan --no-daemon -i -x test

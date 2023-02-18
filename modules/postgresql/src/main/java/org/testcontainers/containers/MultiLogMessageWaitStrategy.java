@@ -39,7 +39,10 @@ public class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
 
                 try {
                     for (String regEx : ex) {
-                        LogContainerCmd cmd = DockerClientFactory.instance().client().logContainerCmd(waitStrategyTarget.getContainerId())
+                        LogContainerCmd cmd = DockerClientFactory
+                            .instance()
+                            .client()
+                            .logContainerCmd(waitStrategyTarget.getContainerId())
                             .withFollowStream(true)
                             .withSince(0)
                             .withStdOut(true)
@@ -69,5 +72,4 @@ public class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
         this.regExs.add(regExs);
         return this;
     }
-
 }

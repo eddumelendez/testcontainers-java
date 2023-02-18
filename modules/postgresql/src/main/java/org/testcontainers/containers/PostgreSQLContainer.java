@@ -5,16 +5,14 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Set;
 
-import static java.util.Collections.singleton;
-
-/**
- * @author richardnorth
- */
 public class PostgreSQLContainer<SELF extends PostgreSQLContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
+
     public static final String NAME = "postgresql";
+
     public static final String IMAGE = "postgres";
 
     public static final String DEFAULT_TAG = "9.6.12";
+
     private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("postgres");
 
     public static final Integer POSTGRESQL_PORT = 5432;
@@ -24,7 +22,9 @@ public class PostgreSQLContainer<SELF extends PostgreSQLContainer<SELF>> extends
     static final String DEFAULT_PASSWORD = "test";
 
     private String databaseName = "test";
+
     private String username = "test";
+
     private String password = "test";
 
     private static final String FSYNC_OFF_OPTION = "fsync=off";
@@ -43,7 +43,6 @@ public class PostgreSQLContainer<SELF extends PostgreSQLContainer<SELF>> extends
 
     public PostgreSQLContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
-
         dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         this.waitStrategy = new PostgreSQLWaitStrategy();
@@ -52,10 +51,15 @@ public class PostgreSQLContainer<SELF extends PostgreSQLContainer<SELF>> extends
         addExposedPort(POSTGRESQL_PORT);
     }
 
+    /**
+     * @return the ports on which to check if the container is ready
+     * @deprecated use {@link #getLivenessCheckPortNumbers()} instead
+     */
     @NotNull
     @Override
+    @Deprecated
     protected Set<Integer> getLivenessCheckPorts() {
-        return singleton(getMappedPort(POSTGRESQL_PORT));
+        return super.getLivenessCheckPorts();
     }
 
     @Override
@@ -75,8 +79,15 @@ public class PostgreSQLContainer<SELF extends PostgreSQLContainer<SELF>> extends
     @Override
     public String getJdbcUrl() {
         String additionalUrlParams = constructUrlParameters("?", "&");
-        return "jdbc:postgresql://" + getHost() + ":" + getMappedPort(POSTGRESQL_PORT)
-            + "/" + databaseName + additionalUrlParams;
+        return (
+            "jdbc:postgresql://" +
+            getHost() +
+            ":" +
+            getMappedPort(POSTGRESQL_PORT) +
+            "/" +
+            databaseName +
+            additionalUrlParams
+        );
     }
 
     @Override

@@ -21,11 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Ryuk-based {@link ResourceReaper} implementation.
  *
  * @see <a href="https://github.com/testcontainers/moby-ryuk">moby-ryuk</a>
- * @deprecated internal API
  */
-@Deprecated
 @Slf4j
-public class RyukResourceReaper extends ResourceReaper {
+class RyukResourceReaper extends ResourceReaper {
 
     private static final RateLimiter RYUK_ACK_RATE_LIMITER = RateLimiterBuilder
         .newBuilder()
@@ -36,10 +34,6 @@ public class RyukResourceReaper extends ResourceReaper {
     private final AtomicBoolean started = new AtomicBoolean(false);
 
     private final RyukContainer ryukContainer = new RyukContainer();
-
-    public String getContainerId() {
-        return ryukContainer.getContainerId();
-    }
 
     @Override
     public void init() {
@@ -96,7 +90,10 @@ public class RyukResourceReaper extends ResourceReaper {
                         // not set the read timeout, as Ryuk would not send anything unless a new filter is submitted, meaning that we would get a timeout exception pretty quick
                         try (Socket clientSocket = new Socket()) {
                             clientSocket.connect(new InetSocketAddress(host, ryukPort), 5 * 1000);
-                            ResourceReaper.FilterRegistry registry = new ResourceReaper.FilterRegistry(clientSocket.getInputStream(), clientSocket.getOutputStream());
+                            ResourceReaper.FilterRegistry registry = new ResourceReaper.FilterRegistry(
+                                clientSocket.getInputStream(),
+                                clientSocket.getOutputStream()
+                            );
 
                             synchronized (ResourceReaper.DEATH_NOTE) {
                                 while (true) {

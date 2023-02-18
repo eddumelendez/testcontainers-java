@@ -41,5 +41,4 @@ public class PostgreSQLWaitStrategy extends AbstractWaitStrategy {
             throw new RuntimeException(e);
         }
     }
-
 }
