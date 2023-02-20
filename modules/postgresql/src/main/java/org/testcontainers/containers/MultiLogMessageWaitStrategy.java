@@ -15,9 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
-import static org.testcontainers.containers.output.OutputFrame.OutputType.STDERR;
-import static org.testcontainers.containers.output.OutputFrame.OutputType.STDOUT;
-
 public class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
 
     private List<List<String>> regExs = new ArrayList<>();
@@ -33,8 +30,8 @@ public class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
         for (List<String> ex : this.regExs) {
             WaitingConsumer waitingConsumer = new WaitingConsumer();
             try (FrameConsumerResultCallback callback = new FrameConsumerResultCallback()) {
-                callback.addConsumer(STDOUT, waitingConsumer);
-                callback.addConsumer(STDERR, waitingConsumer);
+                callback.addConsumer(OutputFrame.OutputType.STDOUT, waitingConsumer);
+                callback.addConsumer(OutputFrame.OutputType.STDERR, waitingConsumer);
                 success = true;
 
                 try {
@@ -49,9 +46,10 @@ public class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
                             .withStdErr(true);
                         cmd.exec(callback);
 
-                        Predicate<OutputFrame> waitPredicate = outputFrame ->
+                        Predicate<OutputFrame> waitPredicate = outputFrame -> {
                             // (?s) enables line terminator matching (equivalent to Pattern.DOTALL)
-                            outputFrame.getUtf8String().matches("(?s)" + regEx);
+                            return outputFrame.getUtf8String().matches("(?s)" + regEx);
+                        };
 
                         waitingConsumer.waitUntil(waitPredicate, limit, TimeUnit.SECONDS, times);
                     }
