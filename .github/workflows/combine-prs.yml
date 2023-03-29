@@ -7,7 +7,7 @@ jobs:
   combine-prs:
     permissions:
       contents: read
-      pull-request: read
+      pull-requests: read
     runs-on: ubuntu-latest
     steps:
       - name: combine-prs
