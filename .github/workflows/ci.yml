@@ -71,6 +71,8 @@ jobs:
         uses: atomicjar/testcontainers-cloud-setup-action@main
         with:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
+        env:
+          TC_BIND_MOUNTS_ENABLED: true
       - name: Test using Testcontainers Cloud
         run: |
           ./gradlew :testcontainers:check --no-daemon --continue --scan
