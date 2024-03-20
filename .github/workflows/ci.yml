@@ -74,6 +74,8 @@ jobs:
       - name: Test using Testcontainers Cloud
         run: |
           ./gradlew :testcontainers:check --no-daemon --continue --scan
+        env:
+          TC_BIND_MOUNTS_ENABLED: true
       - uses: ./.github/actions/setup-junit-report
 
   turbo-mode:
