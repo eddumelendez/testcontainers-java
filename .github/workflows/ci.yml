@@ -59,6 +59,23 @@ jobs:
           ./gradlew :testcontainers:check --no-daemon --continue --scan
       - uses: ./.github/actions/setup-junit-report
 
+  tcc:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-22.04
+    permissions:
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-build
+      - name: Setup Testcontainers Cloud Client
+        uses: atomicjar/testcontainers-cloud-setup-action@main
+        with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
+      - name: Test using Testcontainers Cloud
+        run: |
+          ./gradlew :testcontainers:check --no-daemon --continue --scan
+      - uses: ./.github/actions/setup-junit-report
+
   turbo-mode:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-22.04
